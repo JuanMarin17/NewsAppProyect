@@ -7,6 +7,7 @@ import OfflineBanner from './components/OfflineBanner'
 
 export default function App() {
   const [activeEndpoint, setActiveEndpoint] = useState(null)
+  const [language, setLanguage] = useState('es')
 
   const handleSelect = (id) => {
     setActiveEndpoint((prev) => (prev === id ? null : id))
@@ -15,11 +16,13 @@ export default function App() {
   return (
     <>
       <OfflineBanner />
-      <Header />
+      <Header language={language} onLanguageChange={setLanguage} />
       <main>
         <Hero />
         <MenuGrid activeId={activeEndpoint} onSelect={handleSelect} />
-        {activeEndpoint && <ResultsPanel endpointId={activeEndpoint} />}
+        {activeEndpoint && (
+          <ResultsPanel endpointId={activeEndpoint} language={language} />
+        )}
       </main>
     </>
   )

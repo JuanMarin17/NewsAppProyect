@@ -18,39 +18,41 @@ export function useNewsQuery() {
     setError(null)
     setData(null)
 
+    const lang = params.language || 'es'
+
     try {
       let result
 
       switch (endpointId) {
         case 'top':
-          result = await fetchTopNews()
+          result = await fetchTopNews(lang)
           break
         case 'all':
-          result = await fetchAllNews()
+          result = await fetchAllNews(lang)
           break
         case 'search':
-          result = await fetchAllNews({ search: params.query })
+          result = await fetchAllNews(lang, { search: params.query })
           break
         case 'similar':
-          result = await fetchSimilarNews(params.query)
+          result = await fetchSimilarNews(params.query, lang)
           break
         case 'sources':
-          result = await fetchSources()
+          result = await fetchSources(lang)
           break
         case 'date':
-          result = await fetchByDateRange(params.dateAfter, params.dateBefore)
+          result = await fetchByDateRange(params.dateAfter, params.dateBefore, lang)
           break
         case 'latest':
-          result = await fetchLatest24h()
+          result = await fetchLatest24h(lang)
           break
         default:
-          throw new Error('Unknown endpoint')
+          throw new Error('Endpoint desconocido')
       }
 
-      // El SW devuelve { offline: true } cuando no hay conexión ni cache
       if (result?.offline) {
-        throw new Error('Sin conexión a internet. Conectate para ver nuevas noticias.')
+        throw new Error('Sin conexión a internet. Conéctate para ver nuevas noticias.')
       }
+
       setData(result)
     } catch (err) {
       setError(err.message || 'Error de conexión. Verifica tu token de API.')

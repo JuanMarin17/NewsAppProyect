@@ -4,7 +4,7 @@ import '../styles/ArticleCard.css'
 function formatDate(str) {
   if (!str) return ''
   try {
-    return new Date(str).toLocaleDateString('en-GB', {
+    return new Date(str).toLocaleDateString('es-ES', {
       day: 'numeric', month: 'short', year: 'numeric',
     })
   } catch {
@@ -28,13 +28,13 @@ export default function ArticleCard({ article, accent, index }) {
         ) : (
           <div className="article-card__placeholder">⚗</div>
         )}
-        <span className="article-card__category-pill">science · es</span>
+        <span className="article-card__category-pill">ciencia · es</span>
       </div>
 
       <div className="article-card__body">
         <div className="article-card__meta">
           <span className="article-card__source" style={{ color: accent }}>
-            {article.source || 'Unknown'}
+            {article.source || 'Desconocido'}
           </span>
           <span className="article-card__sep" />
           <span className="article-card__date">{formatDate(article.published_at)}</span>
@@ -53,7 +53,7 @@ export default function ArticleCard({ article, accent, index }) {
           rel="noopener noreferrer"
           style={{ color: accent }}
         >
-          Read article →
+          Leer artículo →
         </a>
       </div>
     </article>

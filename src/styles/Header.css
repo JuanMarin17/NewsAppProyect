@@ -68,15 +68,33 @@
   gap: 10px;
 }
 
-.header__tag {
+.header__lang-select {
   font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: 0.06em;
+  font-size: 11px;
+  letter-spacing: 0.04em;
   color: var(--accent-1);
   background: rgba(182, 240, 200, 0.08);
   border: 1px solid rgba(182, 240, 200, 0.2);
-  padding: 3px 8px;
+  padding: 5px 10px;
   border-radius: 20px;
-  white-space: nowrap;
+  cursor: pointer;
+  outline: none;
+  transition: background var(--transition), border-color var(--transition);
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 28px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23b6f0c8' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+}
+
+.header__lang-select:hover {
+  background-color: rgba(182, 240, 200, 0.14);
+  border-color: rgba(182, 240, 200, 0.4);
+}
+
+.header__lang-select option {
+  background: var(--bg-2);
+  color: var(--text-primary);
 }
 

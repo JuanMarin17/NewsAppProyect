@@ -11,12 +11,11 @@ const request = async (path, params = {}) => {
   try {
     res = await fetch(`${BASE_URL}${path}?${query}`)
   } catch {
-    throw new Error('Sin conexión a internet. Conectate para ver nuevas noticias.')
+    throw new Error('Sin conexión a internet. Conéctate para ver nuevas noticias.')
   }
 
   const json = await res.json()
 
-  // El SW devuelve { offline: true } cuando no hay red ni cache
   if (json?.offline) return json
 
   if (!res.ok) {
@@ -26,35 +25,35 @@ const request = async (path, params = {}) => {
   return json
 }
 
-export const fetchTopNews = () =>
-  request('/news/top', { locale: 'es', categories: 'science', language: 'es' })
+export const fetchTopNews = (lang = 'es') =>
+  request('/news/top', { locale: 'es', categories: 'science', language: lang })
 
-export const fetchAllNews = (extraParams = {}) =>
-  request('/news/all', { locale: 'es', categories: 'science', language: 'es', ...extraParams })
+export const fetchAllNews = (lang = 'es', extraParams = {}) =>
+  request('/news/all', { locale: 'es', categories: 'science', language: lang, ...extraParams })
 
-export const fetchSimilarNews = (search) =>
-  request('/news/similar', { locale: 'es', categories: 'science', language: 'es', search })
+export const fetchSimilarNews = (search, lang = 'es') =>
+  request('/news/similar', { locale: 'es', categories: 'science', language: lang, search })
 
-export const fetchSources = () =>
-  request('/news/sources', { locale: 'es', categories: 'science', language: 'es' })
+export const fetchSources = (lang = 'es') =>
+  request('/news/sources', { locale: 'es', categories: 'science', language: lang })
 
-export const fetchByDateRange = (published_after, published_before) =>
+export const fetchByDateRange = (published_after, published_before, lang = 'es') =>
   request('/news/all', {
     locale: 'es',
     categories: 'science',
-    language: 'es',
+    language: lang,
     published_after,
     published_before,
   })
 
-export const fetchLatest24h = () => {
+export const fetchLatest24h = (lang = 'es') => {
   const yesterday = new Date()
   yesterday.setDate(yesterday.getDate() - 1)
   const dateStr = yesterday.toISOString().split('T')[0]
   return request('/news/all', {
     locale: 'es',
     categories: 'science',
-    language: 'es',
+    language: lang,
     published_after: dateStr,
     limit: 12,
   })

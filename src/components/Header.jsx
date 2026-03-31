@@ -1,6 +1,7 @@
+import { LANGUAGES } from '../services/endpoints'
 import '../styles/Header.css'
 
-export default function Header() {
+export default function Header({ language, onLanguageChange }) {
   return (
     <header className="header">
       <div className="header__inner">
@@ -8,11 +9,22 @@ export default function Header() {
           <div className="header__logo-mark">⚛</div>
           <div>
             <div className="header__logo-text">ScienceNews</div>
-            <div className="header__logo-sub">Spain</div>
+            <div className="header__logo-sub">España</div>
           </div>
         </div>
         <div className="header__right">
-          <span className="header__tag">🇩🇪 ES · Science · ES</span>
+          <select
+            className="header__lang-select"
+            value={language}
+            onChange={(e) => onLanguageChange(e.target.value)}
+            aria-label="Idioma de las noticias"
+          >
+            {LANGUAGES.map((l) => (
+              <option key={l.code} value={l.code}>
+                {l.flag} {l.label}
+              </option>
+            ))}
+          </select>
         </div>
       </div>
     </header>

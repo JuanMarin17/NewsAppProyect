@@ -7,7 +7,7 @@ import Loader from './Loader'
 import ErrorBox from './ErrorBox'
 import '../styles/Panel.css'
 
-export default function ResultsPanel({ endpointId }) {
+export default function ResultsPanel({ endpointId, language }) {
   const ep = ENDPOINTS.find((e) => e.id === endpointId)
   const { data, loading, error, execute } = useNewsQuery()
 
@@ -20,12 +20,12 @@ export default function ResultsPanel({ endpointId }) {
     setDateAfter('')
     setDateBefore('')
     if (ep?.type === 'auto') {
-      execute(endpointId)
+      execute(endpointId, { language })
     }
-  }, [endpointId])
+  }, [endpointId, language])
 
   const handleFetch = () => {
-    execute(endpointId, { query, dateAfter, dateBefore })
+    execute(endpointId, { query, dateAfter, dateBefore, language })
   }
 
   const handleKeyDown = (e) => {
@@ -49,7 +49,7 @@ export default function ResultsPanel({ endpointId }) {
           </div>
           {meta && (
             <span className="panel__count" style={{ color: ep.accent, borderColor: ep.accent }}>
-              {meta.found ?? articles.length} results
+              {meta.found ?? articles.length} resultados
             </span>
           )}
         </div>
@@ -72,7 +72,7 @@ export default function ResultsPanel({ endpointId }) {
               }}
               onClick={handleFetch}
             >
-              Fetch →
+              Buscar →
             </button>
           </div>
         )}
@@ -100,7 +100,7 @@ export default function ResultsPanel({ endpointId }) {
               }}
               onClick={handleFetch}
             >
-              Fetch →
+              Buscar →
             </button>
           </div>
         )}
@@ -118,7 +118,7 @@ export default function ResultsPanel({ endpointId }) {
                   ))}
                 </div>
               ) : (
-                <div className="panel__empty">No sources found.</div>
+                <div className="panel__empty">No se encontraron fuentes.</div>
               )
             ) : articles.length > 0 ? (
               <div className="articles-grid">
@@ -127,13 +127,13 @@ export default function ResultsPanel({ endpointId }) {
                 ))}
               </div>
             ) : (
-              <div className="panel__empty">No articles found for this query.</div>
+              <div className="panel__empty">No se encontraron artículos para esta consulta.</div>
             )}
           </>
         )}
 
         {!loading && !error && !data && (ep.type === 'search' || ep.type === 'date') && (
-          <div className="panel__empty">Fill in the fields above and press Fetch →</div>
+          <div className="panel__empty">Completa los campos y presiona Buscar →</div>
         )}
       </div>
     </section>
