@@ -4,6 +4,7 @@ import Hero from './components/Hero'
 import MenuGrid from './components/MenuGrid'
 import ResultsPanel from './components/ResultsPanel'
 import OfflineBanner from './components/OfflineBanner'
+import Footer from './components/Footer'
 
 export default function App() {
   const [activeEndpoint, setActiveEndpoint] = useState(null)
@@ -24,6 +25,7 @@ export default function App() {
           <ResultsPanel endpointId={activeEndpoint} language={language} />
         )}
       </main>
+      <Footer />
     </>
   )
 }
