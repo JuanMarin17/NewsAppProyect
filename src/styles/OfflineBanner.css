@@ -1,0 +1,33 @@
+.offline-banner {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(247, 90, 90, 0.12);
+  border: 1px solid rgba(247, 90, 90, 0.35);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 40px;
+  padding: 10px 20px;
+  white-space: nowrap;
+  animation: fadeUp 0.3s ease both;
+  max-width: calc(100vw - 32px);
+}
+
+.offline-banner__icon {
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.offline-banner__text {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: #f77070;
+  white-space: normal;
+  line-height: 1.4;
+}
