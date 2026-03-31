@@ -9,14 +9,10 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   </React.StrictMode>
 )
 
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("/service-worker.js")
-      .then((registration) => {
-        console.log("Service Worker registrado:", registration);
-      })
-      .catch((error) => {
-        console.log("Error al registrar SW:", error);
-      });
-  });
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/service-worker.js').then((reg) => {
+      reg.update()
+    })
+  })
 }

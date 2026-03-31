@@ -1,14 +1,8 @@
-const CACHE_NAME = 'science-news-v1'
-const API_CACHE_NAME = 'science-news-api-v1'
+const CACHE_NAME = 'science-news-v2'
+const API_CACHE_NAME = 'science-news-api-v2'
 
-// Assets del shell de la app
-const SHELL_ASSETS = ['/', '/index.html']
-
-// ── Install: cachear el shell ──────────────────────────────────────────────
-self.addEventListener('install', (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(SHELL_ASSETS))
-  )
+// ── Install ────────────────────────────────────────────────────────────────
+self.addEventListener('install', () => {
   self.skipWaiting()
 })
 
@@ -31,26 +25,35 @@ self.addEventListener('fetch', (event) => {
   const { request } = event
   const url = new URL(request.url)
 
-  // Llamadas a la API de noticias → Network first, fallback a cache
+  // Solo interceptar GET
+  if (request.method !== 'GET') return
+
+  // Llamadas a la API → Network first, fallback a cache
   if (url.hostname === 'api.thenewsapi.com') {
-    event.respondWith(networkFirstWithCache(request))
+    event.respondWith(networkFirstAPI(request))
     return
   }
 
-  // Assets de la app → Cache first, fallback a network
-  if (request.destination !== 'document' || url.origin === self.location.origin) {
-    event.respondWith(cacheFirstWithNetwork(request))
+  // Assets estáticos del build (/assets/*, /icons/*, etc.) → Cache first
+  if (url.origin === self.location.origin && url.pathname !== '/') {
+    event.respondWith(cacheFirstStatic(request))
     return
   }
 
-  // Navegación → Network first, fallback a shell cacheado
+  // Navegación (/) → Network first, fallback al shell cacheado
   event.respondWith(
-    fetch(request).catch(() => caches.match('/index.html'))
+    fetch(request)
+      .then((res) => {
+        const cache = caches.open(CACHE_NAME)
+        cache.then((c) => c.put(request, res.clone()))
+        return res
+      })
+      .catch(() => caches.match('/index.html'))
   )
 })
 
-// Network first: intenta red, guarda en cache, si falla devuelve cache
-async function networkFirstWithCache(request) {
+// Network first para API: guarda en cache, si falla devuelve cache o error offline
+async function networkFirstAPI(request) {
   const cache = await caches.open(API_CACHE_NAME)
   try {
     const response = await fetch(request)
@@ -61,16 +64,15 @@ async function networkFirstWithCache(request) {
   } catch {
     const cached = await cache.match(request)
     if (cached) return cached
-    // Sin conexión y sin cache: respuesta de error estructurada
     return new Response(
-      JSON.stringify({ offline: true, message: 'No internet connection' }),
+      JSON.stringify({ offline: true, message: 'Sin conexión a internet' }),
       { status: 503, headers: { 'Content-Type': 'application/json' } }
     )
   }
 }
 
-// Cache first: devuelve cache si existe, si no va a red y cachea
-async function cacheFirstWithNetwork(request) {
+// Cache first para assets estáticos: si no está en cache, va a red y cachea
+async function cacheFirstStatic(request) {
   const cached = await caches.match(request)
   if (cached) return cached
   try {
@@ -81,6 +83,10 @@ async function cacheFirstWithNetwork(request) {
     }
     return response
   } catch {
+    // Si es una navegación fallida, devolver el shell
+    if (request.destination === 'document') {
+      return caches.match('/index.html')
+    }
     return new Response('Offline', { status: 503 })
   }
 }
